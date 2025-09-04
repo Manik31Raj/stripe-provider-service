@@ -1,0 +1,22 @@
+package com.hulkhiretech.payments.util;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+@Component
+@Slf4j
+@RequiredArgsConstructor
+public class JsonUtil {
+    private final ObjectMapper objectMapper;
+
+    public <T> T convertJsonToObject(String jsonString, Class<T> valueType) {
+        try {
+            return objectMapper.readValue(jsonString, valueType);
+        } catch (Exception e) {
+            log.error("Error converting JSON to Object: {}", e.getMessage());
+            return null;
+        }
+    }
+}
