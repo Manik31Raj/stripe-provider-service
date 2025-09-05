@@ -31,4 +31,14 @@ public class PaymentController {
             return response;
         }
     }
+    @GetMapping("/{id}")
+    public PaymentResponse getPayment(@PathVariable String id)
+    {
+        log.info("Get Payment API called id: {}",id);
+
+        PaymentResponse response=paymentService.getPayment(id);
+        log.info("Get Payment API response: {}",response);
+
+        return response;
+    }
 }
