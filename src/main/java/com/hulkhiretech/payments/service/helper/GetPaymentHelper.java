@@ -4,8 +4,6 @@ import com.hulkhiretech.payments.constant.Constant;
 import com.hulkhiretech.payments.constant.ErrorCodeEnum;
 import com.hulkhiretech.payments.exception.StripeProviderException;
 import com.hulkhiretech.payments.http.HttpRequest;
-import com.hulkhiretech.payments.pojo.CreatePaymentRequest;
-import com.hulkhiretech.payments.pojo.LineItem;
 import com.hulkhiretech.payments.pojo.PaymentResponse;
 import com.hulkhiretech.payments.stripe.StripeResponse;
 import com.hulkhiretech.payments.util.JsonUtil;
@@ -15,54 +13,37 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
-public class CreatePaymentHelper {
+public class GetPaymentHelper {
 
     @Value("${stripe.api.key}")
     private String  stripeAPIKey;
-    @Value("${stripe.create-session-url}")
-    private String createSessionUrl;
+
+    @Value("${stripe.get-session-url}")
+    private String getSessionUrlTemplate;
 
     private final JsonUtil jsonUtil;
 
     private final ChatClient chatClient;
 
-    public HttpRequest prepareHttpRequest(CreatePaymentRequest createPaymentRequest) {
+    public HttpRequest prepareHttpRequest(String id) {
 
-        log.info("Preparing HTTP request for payment creation: {}", createPaymentRequest);
+        log.info("Preparing HTTP request for fetching payment with id: {}", id);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(stripeAPIKey, Constant.EMPTY_STRING);
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add(Constant.MODE, Constant.MODE_PAYMENT);
-        requestBody.add(Constant.SUCCESS_URL, createPaymentRequest.getSuccessUrl());
-        requestBody.add(Constant.CANCEL_URL, createPaymentRequest.getCancelUrl());
-
-
-        for(int i = 0; i< createPaymentRequest.getLineItems().size(); i++) {
-            LineItem lineItem = createPaymentRequest.getLineItems().get(i);
-
-            requestBody.add("line_items["+i+"][price_data][currency]", String.valueOf(lineItem.getCurrency()));
-            requestBody.add("line_items["+i+"][price_data][unit_amount]", String.valueOf((int)(lineItem.getUnitAmount()))); // amount in cents
-            requestBody.add("line_items["+i+"][price_data][product_data][name]", lineItem.getProductName());
-            requestBody.add("line_items["+i+"][price_data][product_data][images][]", lineItem.getProductImageUrl());
-            requestBody.add("line_items["+i+"][price_data][product_data][description]", lineItem.getProductDescription());
-            requestBody.add("line_items["+i+"][quantity]", String.valueOf(lineItem.getQuantity()));
-        }
-        requestBody.add("invoice_creation[enabled]", String.valueOf(Constant.INVOICE_CREATION_ENABLED));
+        String getSessionUrl = getSessionUrlTemplate.replace("{id}", id);
+        log.info("Constructed getSessionUrl: {}", getSessionUrl);
 
         HttpRequest httpRequest = new HttpRequest();
-        httpRequest.setHttpMethod(HttpMethod.POST);
-        httpRequest.setUrl(createSessionUrl);
+        httpRequest.setHttpMethod(HttpMethod.GET);
+        httpRequest.setUrl(getSessionUrl);
         httpRequest.setHttpHeaders(headers);
-        httpRequest.setRequestBody(requestBody);
+        httpRequest.setRequestBody("");
 
         log.info("Prepared HTTP request: {}", httpRequest);
 
@@ -75,10 +56,11 @@ public class CreatePaymentHelper {
 
         if (httpResponse.getStatusCode().is2xxSuccessful()) {
             log.info("HTTP response is successful");
+
             StripeResponse response = jsonUtil.convertJsonToObject(httpResponse.getBody(), StripeResponse.class);
             log.info("Parsed PaymentResponse: {}", response);
 
-            if(response != null && response.getId() != null && response.getUrl() != null) {
+            if(response != null && response.getId() != null) {
                 log.info("PaymentResponse is valid and contains required fields");
                 return response ;
             }
@@ -107,7 +89,7 @@ public class CreatePaymentHelper {
         throw new StripeProviderException(
                 ErrorCodeEnum.GET_PAYMENT_FAILED.getErrorCode(),
                 ErrorCodeEnum.GET_PAYMENT_FAILED.getErrorMessage(),
-                HttpStatus.SERVICE_UNAVAILABLE
+                HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
     private String prepareErrorSummaryMessage(ResponseEntity<String> httpResponse) {

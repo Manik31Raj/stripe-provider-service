@@ -6,4 +6,5 @@ import com.hulkhiretech.payments.pojo.PaymentResponse;
 public interface PaymentService {
     public PaymentResponse cratePayment(CreatePaymentRequest createPaymentRequest);
 
+    public PaymentResponse getPayment(String id) ;
 }

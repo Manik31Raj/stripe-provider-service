@@ -1,16 +1,13 @@
 package com.hulkhiretech.payments.constant;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.sql.SQLException;
 
 @Getter
 public enum ErrorCodeEnum {
     GENERIC_ERROR("40000", "Internal Server Error"),
     INVAlID_QUANTITY("40001", "Invalid Quantity : Provide quantity with 1 or above"),
     UNABLE_TO_CONNECT_TO_STRIPE("40002", "Unable to connect to stripe"),
-    PAYMENT_CREATION_FAILED("40003", "Payment creation failed"),
+    GET_PAYMENT_FAILED("40003", "Payment creation failed"),
     STRIPE_ERROR("40004", "<dynamically prepare from stripe error response>");
 
     private final String errorCode;
