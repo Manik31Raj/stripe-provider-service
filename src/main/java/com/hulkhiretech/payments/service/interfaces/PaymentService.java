@@ -7,4 +7,6 @@ public interface PaymentService {
     public PaymentResponse cratePayment(CreatePaymentRequest createPaymentRequest);
 
     public PaymentResponse getPayment(String id) ;
+
+    public PaymentResponse expirePayment(String id);
 }

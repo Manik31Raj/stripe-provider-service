@@ -7,6 +7,7 @@ import com.hulkhiretech.payments.http.HttpServiceEngine;
 import com.hulkhiretech.payments.pojo.CreatePaymentRequest;
 import com.hulkhiretech.payments.pojo.PaymentResponse;
 import com.hulkhiretech.payments.service.helper.CreatePaymentHelper;
+import com.hulkhiretech.payments.service.helper.ExpirePaymentHelper;
 import com.hulkhiretech.payments.service.helper.GetPaymentHelper;
 import com.hulkhiretech.payments.service.interfaces.PaymentService;
 import com.hulkhiretech.payments.stripe.StripeResponse;
@@ -29,6 +30,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final CreatePaymentHelper createPaymentHelper;
 
     private final GetPaymentHelper getPaymentHelper;
+
+    private final ExpirePaymentHelper expirePaymentHelper;
 
     @Override
     public PaymentResponse cratePayment(CreatePaymentRequest createPaymentRequest) {
@@ -65,6 +68,24 @@ public class PaymentServiceImpl implements PaymentService {
         log.info("HTTP call response: {}", httpResponse);
 
         StripeResponse stripeResponse = getPaymentHelper.processResponse(httpResponse);
+        log.info("Final Payment creation to be returned : {}", stripeResponse);
+
+        PaymentResponse response = StripeResponseUtil.getPaymentResponse(stripeResponse);
+        log.info("PaymentResponse to be returned : {}", response);
+
+        return response;
+    }
+
+    @Override
+    public PaymentResponse expirePayment(String id) {
+        log.info("Expire Payment API called id: {}",id);
+
+        HttpRequest httpRequest = expirePaymentHelper.prepareHttpRequest(id);
+
+        ResponseEntity<String> httpResponse=httpServiceEngine.makeHttpCall(httpRequest);
+        log.info("HTTP call response: {}", httpResponse);
+
+        StripeResponse stripeResponse = expirePaymentHelper.processResponse(httpResponse);
         log.info("Final Payment creation to be returned : {}", stripeResponse);
 
         PaymentResponse response = StripeResponseUtil.getPaymentResponse(stripeResponse);
