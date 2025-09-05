@@ -41,4 +41,15 @@ public class PaymentController {
 
         return response;
     }
+
+    @PostMapping("/{id}/expire")
+    public PaymentResponse expirePayment(@PathVariable String id)
+    {
+        log.info("Expire Payment API called id: {}",id);
+
+        PaymentResponse response=paymentService.expirePayment(id);
+        log.info("Expire Payment API response: {}",response);
+
+        return response;
+    }
 }
