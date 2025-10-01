@@ -120,6 +120,12 @@
 			<artifactId>spring-ai-starter-model-ollama</artifactId>
 		</dependency>
 
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>29.5.0</version>
+        </dependency>
+
 
 	</dependencies>
 	<dependencyManagement>

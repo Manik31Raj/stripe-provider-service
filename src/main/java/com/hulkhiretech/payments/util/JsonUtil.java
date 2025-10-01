@@ -19,4 +19,13 @@ public class JsonUtil {
             return null;
         }
     }
+
+    public String convertObjectToJson(Object object) {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (Exception e) {
+            log.error("Error converting Object to JSON: {}", e.getMessage());
+            return null;
+        }
+    }
 }

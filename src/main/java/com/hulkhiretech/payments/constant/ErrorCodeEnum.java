@@ -8,7 +8,8 @@ public enum ErrorCodeEnum {
     INVAlID_QUANTITY("40001", "Invalid Quantity : Provide quantity with 1 or above"),
     UNABLE_TO_CONNECT_TO_STRIPE("40002", "Unable to connect to stripe"),
     GET_PAYMENT_FAILED("40003", "Payment creation failed"),
-    STRIPE_ERROR("40004", "<dynamically prepare from stripe error response>");
+    STRIPE_ERROR("40004", "<dynamically prepare from stripe error response>"),
+    INVALID_STRIPE_SIGNATURE("40005", "Invalid Stripe Signature");
 
     private final String errorCode;
     private final String errorMessage;
