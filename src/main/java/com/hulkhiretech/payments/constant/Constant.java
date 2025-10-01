@@ -1,6 +1,5 @@
 package com.hulkhiretech.payments.constant;
 
-import com.hulkhiretech.payments.http.HttpServiceEngine;
 
 public class Constant {
 
