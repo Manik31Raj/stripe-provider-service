@@ -2,8 +2,13 @@ package com.hulkhiretech.payments.controller;
 
 import com.hulkhiretech.payments.constant.Constant;
 import com.hulkhiretech.payments.pojo.CreatePaymentRequest;
+import com.hulkhiretech.payments.pojo.InvoiceGeneratorResponse;
 import com.hulkhiretech.payments.pojo.PaymentResponse;
 import com.hulkhiretech.payments.service.interfaces.PaymentService;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Invoice;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionRetrieveParams;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +54,15 @@ public class PaymentController {
 
         PaymentResponse response=paymentService.expirePayment(id);
         log.info("Expire Payment API response: {}",response);
+
+        return response;
+    }
+    @GetMapping("/{id}/invoice")
+    public InvoiceGeneratorResponse generateInvoice(@PathVariable String id) throws StripeException {
+        log.info("Generate Invoice API called for payment id: {}", id);
+
+        InvoiceGeneratorResponse response = paymentService.generateInvoice(id);
+        log.info("Generate Invoice API response: {}", response);
 
         return response;
     }

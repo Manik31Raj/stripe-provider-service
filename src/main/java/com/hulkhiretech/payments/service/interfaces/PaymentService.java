@@ -1,6 +1,7 @@
 package com.hulkhiretech.payments.service.interfaces;
 
 import com.hulkhiretech.payments.pojo.CreatePaymentRequest;
+import com.hulkhiretech.payments.pojo.InvoiceGeneratorResponse;
 import com.hulkhiretech.payments.pojo.PaymentResponse;
 
 public interface PaymentService {
@@ -9,4 +10,8 @@ public interface PaymentService {
     public PaymentResponse getPayment(String id) ;
 
     public PaymentResponse expirePayment(String id);
+
+    public InvoiceGeneratorResponse generateInvoice(String id);
+
+
 }
