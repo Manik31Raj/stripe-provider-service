@@ -30,7 +30,7 @@
 			<properties>
 				<spring.profiles.active>local</spring.profiles.active>
 				<logging.path>
-					C:\\Users\MANIK RAJ\\Desktop\\SpringBoot\\logs\\stripe-provider-service
+					C:\\Users\MANIK RAJ\\Desktop\\Stripe\\logs\\stripe-provider-service
 				</logging.path>
 			</properties>
 		</profile>
@@ -134,6 +134,15 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
         </dependency>
 
 
