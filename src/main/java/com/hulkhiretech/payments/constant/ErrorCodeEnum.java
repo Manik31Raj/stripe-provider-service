@@ -9,7 +9,8 @@ public enum ErrorCodeEnum {
     UNABLE_TO_CONNECT_TO_STRIPE("40002", "Unable to connect to stripe"),
     GET_PAYMENT_FAILED("40003", "Payment creation failed"),
     STRIPE_ERROR("40004", "<dynamically prepare from stripe error response>"),
-    INVALID_STRIPE_SIGNATURE("40005", "Invalid Stripe Signature");
+    INVALID_STRIPE_SIGNATURE("40005", "Invalid Stripe Signature"),
+    PAYMENT_INCOMPLETE("40006", "Payment is not completed !! Kindly complete payment to generate invoice");
 
     private final String errorCode;
     private final String errorMessage;

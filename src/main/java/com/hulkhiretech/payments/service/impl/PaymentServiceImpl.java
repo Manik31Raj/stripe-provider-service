@@ -5,12 +5,16 @@ import com.hulkhiretech.payments.exception.StripeProviderException;
 import com.hulkhiretech.payments.http.HttpRequest;
 import com.hulkhiretech.payments.http.HttpServiceEngine;
 import com.hulkhiretech.payments.pojo.CreatePaymentRequest;
+import com.hulkhiretech.payments.pojo.InvoiceGeneratorResponse;
 import com.hulkhiretech.payments.pojo.PaymentResponse;
 import com.hulkhiretech.payments.service.helper.CreatePaymentHelper;
 import com.hulkhiretech.payments.service.helper.ExpirePaymentHelper;
 import com.hulkhiretech.payments.service.helper.GetPaymentHelper;
+import com.hulkhiretech.payments.service.helper.InvoiceGeneratorHelper;
 import com.hulkhiretech.payments.service.interfaces.PaymentService;
+import com.hulkhiretech.payments.stripe.StripeInvoiceGeneratorResponse;
 import com.hulkhiretech.payments.stripe.StripeResponse;
+import com.hulkhiretech.payments.util.StripeInvoiceResponseUtil;
 import com.hulkhiretech.payments.util.StripeResponseUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import static com.hulkhiretech.payments.util.StripeResponseUtil.getPaymentResponse;
 
 @Service
 @Slf4j
@@ -32,6 +35,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final GetPaymentHelper getPaymentHelper;
 
     private final ExpirePaymentHelper expirePaymentHelper;
+
+    private final InvoiceGeneratorHelper invoiceGeneratorHelper;
 
     @Override
     public PaymentResponse cratePayment(CreatePaymentRequest createPaymentRequest) {
@@ -93,4 +98,23 @@ public class PaymentServiceImpl implements PaymentService {
 
         return response;
     }
+
+    @Override
+    public InvoiceGeneratorResponse generateInvoice(String id) {
+        log.info("Generate Invoice API called for payment id: {}", id);
+
+        HttpRequest httpRequest = invoiceGeneratorHelper.prepareHttpRequest(id);
+
+        ResponseEntity<String> httpResponse=httpServiceEngine.makeHttpCall(httpRequest);
+        log.info("HTTP call response: {}", httpResponse);
+
+        StripeInvoiceGeneratorResponse invoiceResponse= invoiceGeneratorHelper.processResponse(httpResponse);
+        log.info("Final InvoiceResponse to be returned : {}", invoiceResponse);
+
+        InvoiceGeneratorResponse response= StripeInvoiceResponseUtil.getPaymentResponse(invoiceResponse);
+        log.info("InvoiceGeneratorResponse to be returned : {}", response);
+
+        return response;
+    }
+
 }

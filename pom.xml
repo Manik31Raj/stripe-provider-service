@@ -30,7 +30,7 @@
 			<properties>
 				<spring.profiles.active>local</spring.profiles.active>
 				<logging.path>
-					C:\\Users\MANIK RAJ\\Desktop\\SpringBoot\\logs\\stripe-provider-service
+					C:\\Users\MANIK RAJ\\Desktop\\Stripe\\logs\\stripe-provider-service
 				</logging.path>
 			</properties>
 		</profile>
@@ -126,8 +126,28 @@
             <version>29.5.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
 
-	</dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+        </dependency>
+
+
+
+    </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -137,7 +157,15 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-		</dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2024.0.1</version> <!-- Use a version compatible with Spring Boot 3.4.2 -->
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
 	</dependencyManagement>
 	<build>
 		<finalName>stripe-provider-service</finalName>
